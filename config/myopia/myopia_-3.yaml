@@ -1,0 +1,97 @@
+disease: myopia
+level: -3
+dioptria_range: "от -3.25 до -6.0 диоптрий"
+description: "Близорукость средней степени"
+
+sources:
+  - title: "Клинико-функциональные параллели в цветовосприятии у пациентов с миопией"
+    url: "https://cyberleninka.ru/article/n/kliniko-funktsionalnye-paralleli-v-tsvetovospriyatii-u-patsientov-s-miopiey/viewer"
+  - title: "Chromotherapy — Wikipedia"
+    url: "https://en.wikipedia.org/wiki/Chromotherapy"
+  - title: "Сводная таблица по результатам исследования заболеваний глаз"
+    url: "internal"
+
+color_perception:
+  deficit_level: "средний"
+  weak_colors:
+    - "сине-зелёный"
+    - "жёлто-зелёный"
+    - "зелёный"
+    - "циан"
+  note: "Низкий уровень распознавания цветов, дефицит средней степени. Жёлтый фильтр (570-600 нм) съедает синий спектр — улучшает восприятие"
+
+shape_perception:
+  dominant_shape: "вытянутый эллипсоид (66.7%)"
+  distortion: "значительное слияние деталей, объект теряет объём и становится плоским пятном"
+
+color_combinations:
+  - id: 1
+    object_color: "тёмно-красный"
+    object_hex: "#D62828"
+    background: "белый"
+    background_hex: "#FFFFFF"
+    background_scene: "абстрактный"
+    background_file: "plain_white.png"
+    recommended: true
+    note: "Максимальный контраст, тёмно-красный хорошо различим при среднем дефиците"
+  - id: 2
+    object_color: "оранжево-красный"
+    object_hex: "#E76F51"
+    background: "персиковый закат"
+    background_hex: "#FDE8D0"
+    background_scene: "закатный пейзаж"
+    background_file: "sky_sunset_warm.png"
+    recommended: true
+    note: "Тёплая гамма — рекомендована при средней миопии"
+  - id: 3
+    object_color: "жёлтый"
+    object_hex: "#FFD60A"
+    background: "светло-серый"
+    background_hex: "#F1F1F1"
+    background_scene: "абстрактный"
+    background_file: "plain_lightgray.png"
+    recommended: true
+    note: "Жёлтый фильтр (570-600 нм) — специфическая рекомендация для средней миопии"
+  - id: 4
+    object_color: "оранжевый"
+    object_hex: "#F4A261"
+    background: "кремовый"
+    background_hex: "#FFF1E6"
+    background_scene: "абстрактный"
+    background_file: "plain_cream.png"
+    recommended: true
+    note: "Мягкий тёплый фон, не раздражает глаза"
+  - id: 5
+    object_color: "тёмно-красный"
+    object_hex: "#D62828"
+    background: "закатное поле"
+    background_hex: "#FFE8D6"
+    background_scene: "закатный пейзаж"
+    background_file: "field_sunset.png"
+    recommended: true
+    note: "Тёплый пейзаж без зелёных и синих оттенков"
+
+object:
+  shape_start: "множество эллипсов разной степени сжатия"
+  shape_end: "один идеальный круг среди эллипсов"
+  size: "large"
+  border: "жирный чёткий контур"
+  texture: "однородная"
+  exercise_mechanic: >
+    В пространстве плавают множество эллипсов разной степени сжатия.
+    Среди них появляется один идеальный круг — нужно быстро найти и выбрать его.
+    По мере успеха контрастность падает (объекты становятся бледнее).
+
+exercises:
+  - name: "circle_right"
+    speed: "slow"
+  - name: "horizontal"
+    speed: "slow"
+  - name: "vertical"
+    speed: "slow"
+  - name: "zigzag"
+    speed: "very_slow"
+  - name: "clock"
+    speed: "slow"
+  - name: "two_diagonals"
+    speed: "slow"

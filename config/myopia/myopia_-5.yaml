@@ -1,0 +1,103 @@
+disease: myopia
+level: -5
+dioptria_range: "более -6.25 диоптрий"
+description: "Близорукость высокой степени"
+
+sources:
+  - title: "Клинико-функциональные параллели в цветовосприятии у пациентов с миопией"
+    url: "https://cyberleninka.ru/article/n/kliniko-funktsionalnye-paralleli-v-tsvetovospriyatii-u-patsientov-s-miopiey/viewer"
+  - title: "Световые сигналы и развитие близорукости (FR/NIR)"
+    url: "https://link.springer.com/article/10.1007/s40123-022-00490-2"
+  - title: "Сводная таблица по результатам исследования заболеваний глаз"
+    url: "internal"
+
+color_perception:
+  deficit_level: "тяжёлый"
+  weak_colors:
+    - "жёлто-зелёный"
+    - "зелёный"
+    - "сине-зелёный"
+    - "циан"
+    - "синий"
+  note: >
+    Низкий уровень распознавания цветов, дефицит тяжёлой степени.
+    Переход в тёплую гамму (красно-оранжевый спектр).
+    Тёмная тема: светлый текст на тёмном фоне.
+    Дальний красный/ближний инфракрасный свет (FR/NIR) потенциально контролирует прогрессирование.
+
+shape_perception:
+  dominant_shape: "вытянутый эллипсоид"
+  distortion: "дальние объекты совершенно не различимы, искажение прямых линий"
+
+color_combinations:
+  - id: 1
+    object_color: "насыщенный красный"
+    object_hex: "#C1121F"
+    background: "тёмный"
+    background_hex: "#1A1A2E"
+    background_scene: "тёмная тема"
+    background_file: "plain_dark.png"
+    recommended: true
+    note: "Тёмная тема — светлый/яркий объект на тёмном фоне, рекомендована при высокой степени"
+  - id: 2
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "тёмно-синее ночное небо"
+    background_hex: "#0D1B2A"
+    background_scene: "ночной пейзаж"
+    background_file: "sky_night.png"
+    recommended: true
+    note: "Ночной пейзаж как тёмный фон с высоким контрастом"
+  - id: 3
+    object_color: "оранжево-красный"
+    object_hex: "#E76F51"
+    background: "тёплый закат"
+    background_hex: "#FFE8D6"
+    background_scene: "закатный пейзаж"
+    background_file: "sky_sunset_deep.png"
+    recommended: true
+    note: "Тёплая красно-оранжевая гамма — основная рекомендация при высокой миопии"
+  - id: 4
+    object_color: "насыщенный красный"
+    object_hex: "#C1121F"
+    background: "кремовый"
+    background_hex: "#FFF1E6"
+    background_scene: "абстрактный"
+    background_file: "plain_cream.png"
+    recommended: true
+    note: "Тёплый нейтральный фон, максимально контрастный объект"
+  - id: 5
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "тёмно-коричневый"
+    background_hex: "#3D1C02"
+    background_scene: "абстрактный тёмный"
+    background_file: "plain_darkbrown.png"
+    recommended: true
+    note: "Тёмный тёплый фон усиливает восприятие красного объекта"
+
+object:
+  shape_start: "эллипс (периферия)"
+  shape_end: "круг (центр — точка фиксации)"
+  size: "extra_large"
+  border: "очень жирный контур, максимальный контраст"
+  texture: "однородная"
+  exercise_mechanic: >
+    В центре статичный красный круг (точка фиксации).
+    По краям (периферия) пролетают эллипсы которые нужно ловить взглядом
+    не поворачивая головы. При взгляде на периферийный эллипс он должен
+    превращаться в круг.
+
+exercises:
+  - name: "circle_right"
+    speed: "very_slow"
+  - name: "horizontal"
+    speed: "very_slow"
+  - name: "vertical"
+    speed: "very_slow"
+  - name: "zigzag"
+    speed: "very_slow"
+  - name: "clock"
+    speed: "very_slow"
+  - name: "two_diagonals"
+    speed: "very_slow"

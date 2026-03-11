@@ -1,0 +1,102 @@
+disease: hyperopia
+level: +3
+dioptria_range: "от +2.0 до +5.0 диоптрий"
+description: "Дальнозоркость средней степени"
+
+sources:
+  - title: "Color perception levels in patients with hyperopia"
+    url: "https://www.researchgate.net/publication/265132355_Color_perception_levels_in_patients_with_hyperopia"
+  - title: "Гимнастика для глаз по Аветисову"
+    url: "https://www.lensmaster.ru/articles/gimnastika-dlya-glaz-avetisova.html"
+  - title: "Сводная таблица по результатам исследования заболеваний глаз"
+    url: "internal"
+
+color_perception:
+  deficit_level: "незначительный/умеренный"
+  weak_colors:
+    - "красный"
+    - "оранжевый"
+  note: >
+    Дефицит красного спектра. Выраженный эффект хроматической аберрации:
+    красные и оранжевые объекты кажутся далёкими и мутными.
+    Высокий контраст: тёмно-синий текст на белом или белый на синем.
+    Жёлтый (570 нм) допустим как фон.
+
+shape_perception:
+  dominant_shape: "сжатый эллипсоид (84.3%)"
+  secondary_shape: "шаровидная форма (15.7%)"
+  distortion: "выраженная сплюснутая форма, вблизи объекты теряют очертания и сливаются в пятна"
+
+color_combinations:
+  - id: 1
+    object_color: "тёмно-синий"
+    object_hex: "#023E8A"
+    background: "белый"
+    background_hex: "#FFFFFF"
+    background_scene: "абстрактный"
+    background_file: "plain_white.png"
+    recommended: true
+    note: "Тёмно-синий на белом — специфическая рекомендация для средней дальнозоркости, высокий контраст"
+  - id: 2
+    object_color: "белый"
+    object_hex: "#FFFFFF"
+    background: "синее небо"
+    background_hex: "#0077B6"
+    background_scene: "ясное синее небо"
+    background_file: "sky_blue_clear.png"
+    recommended: true
+    note: "Белый объект на синем — рекомендованное сочетание при дефиците красного"
+  - id: 3
+    object_color: "жёлтый"
+    object_hex: "#FFD60A"
+    background: "светло-жёлтый луг"
+    background_hex: "#F0F4C3"
+    background_scene: "луговой пейзаж"
+    background_file: "meadow_sunny.png"
+    recommended: true
+    note: "Жёлтый (570 нм) допустим как цвет объекта и фона"
+  - id: 4
+    object_color: "тёмно-синий"
+    object_hex: "#023E8A"
+    background: "морской пейзаж"
+    background_hex: "#CAF0F8"
+    background_scene: "морской пейзаж"
+    background_file: "sea_light.png"
+    recommended: true
+    note: "Синий объект на светло-голубом морском фоне"
+  - id: 5
+    object_color: "голубой"
+    object_hex: "#48CAE4"
+    background: "белый"
+    background_hex: "#FFFFFF"
+    background_scene: "абстрактный"
+    background_file: "plain_white.png"
+    recommended: true
+    note: "Холодный объект на нейтральном фоне"
+
+object:
+  shape_start: "плоский размытый овал"
+  shape_end: "чёткий круг"
+  size: "large"
+  border: "жирный чёткий контур"
+  texture: "однородная"
+  exercise_mechanic: >
+    Упражнение «Линза-Пресс».
+    В тумане плавают плоские размытые овалы.
+    Необходимо взглядом сжать края овала к центру чтобы он сфокусировался
+    в чёткий круг. Тренировка цилиарной мышцы.
+
+exercises:
+  - name: "circle_right"
+    speed: "slow"
+    note: "Медленно, с попеременной фокусировкой. Все упражнения с открытыми глазами."
+  - name: "horizontal"
+    speed: "slow"
+  - name: "vertical"
+    speed: "slow"
+  - name: "zigzag"
+    speed: "very_slow"
+  - name: "clock"
+    speed: "slow"
+  - name: "two_diagonals"
+    speed: "slow"
