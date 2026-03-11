@@ -1,0 +1,5 @@
+[project]
+name = "PySide Project"
+
+[tool.pyside6-project]
+files = ["main.py", "tabs/__init__.py", "tabs/diagnosis_tab.py", "tabs/testing_tab.py", "tabs/training_tab.py"]
