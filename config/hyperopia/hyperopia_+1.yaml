@@ -3,27 +3,15 @@ level: +1
 dioptria_range: "до +2.0 диоптрий"
 description: "Дальнозоркость слабой степени"
 
-sources:
-  - title: "Color perception levels in patients with hyperopia"
-    url: "https://www.researchgate.net/publication/265132355_Color_perception_levels_in_patients_with_hyperopia"
-  - title: "Гимнастика для глаз по Аветисову"
-    url: "https://www.lensmaster.ru/articles/gimnastika-dlya-glaz-avetisova.html"
-  - title: "Сводная таблица по результатам исследования заболеваний глаз"
-    url: "internal"
-
 color_perception:
   deficit_level: "незначительный"
   weak_colors:
     - "красный (вблизи слегка плывёт)"
-  note: >
-    Смещение в холодный спектр. Контуры на зелёном/синем фоне видны чётче чем на красном.
-    Красные объекты вблизи начинают слегка плыть.
-    Холодная гамма (синий/голубой/циан) повышает чёткость.
 
 shape_perception:
-  dominant_shape: "сжатый эллипсоид (48.8%)"
-  secondary_shape: "шаровидная форма (29.3%), вытянутый эллипсоид (22%)"
-  distortion: "затруднения с определением чётких границ предметов — буквы расплываются или сливаются"
+  dominant_shape: "сжатый эллипсоид"
+  secondary_shape: "шаровидная форма, вытянутый эллипсоид"
+  distortion: "затруднения с определением чётких границ предметов"
 
 color_combinations:
   - id: 1
@@ -34,7 +22,7 @@ color_combinations:
     background_scene: "небесный пейзаж"
     background_file: "sky_light_blue.png"
     recommended: true
-    note: "Тёплый объект на холодном фоне — высокий контраст, холодный фон повышает чёткость"
+
   - id: 2
     object_color: "жёлтый"
     object_hex: "#E9C46A"
@@ -43,7 +31,7 @@ color_combinations:
     background_scene: "облачное небо"
     background_file: "sky_cloudy.png"
     recommended: true
-    note: "Жёлтый объект на голубом фоне — хорошая различимость при слабой дальнозоркости"
+
   - id: 3
     object_color: "оранжевый"
     object_hex: "#F4A261"
@@ -52,7 +40,7 @@ color_combinations:
     background_scene: "лесной пейзаж"
     background_file: "forest_light.png"
     recommended: true
-    note: "Зелёный фон усиливает чёткость контуров для дальнозорких"
+
   - id: 4
     object_color: "жёлто-оранжевый"
     object_hex: "#FFBA08"
@@ -61,7 +49,7 @@ color_combinations:
     background_scene: "абстрактный"
     background_file: "plain_white.png"
     recommended: true
-    note: "Нейтральный фон, тёплый объект"
+
   - id: 5
     object_color: "оранжевый"
     object_hex: "#F4A261"
@@ -70,24 +58,18 @@ color_combinations:
     background_scene: "морской пейзаж"
     background_file: "sea_calm.png"
     recommended: true
-    note: "Голубой морской фон обеспечивает чёткость контуров оранжевого объекта"
 
 object:
-  shape_start: "сплюснутый диск (как таблетка)"
+  shape_start: "сплюснутый диск"
   shape_end: "объёмный шар"
   size: "medium"
   border: "чёткий контур"
   texture: "однородная"
-  exercise_mechanic: >
-    Упражнение «Накачка сферы».
-    Пользователь видит сплюснутый диск символизирующий форму его глаза.
-    Нужно усилием воли фокусируясь на центре превратить диск в объёмный шар.
-    Попеременная фокусировка на ближней и дальней точках.
+  exercise_mechanic: "накачка сферы"
 
 exercises:
   - name: "circle_right"
     speed: "medium"
-    note: "Сначала смотреть на дальний объект, потом на ближний"
   - name: "horizontal"
     speed: "medium"
   - name: "vertical"

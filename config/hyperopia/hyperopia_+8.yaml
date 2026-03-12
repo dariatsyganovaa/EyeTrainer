@@ -1,5 +1,5 @@
 disease: hyperopia
-level: +5
+level: +8
 dioptria_range: "+5.0 и более диоптрий"
 description: "Дальнозоркость высокой степени"
 
@@ -33,12 +33,12 @@ color_combinations:
     recommended: true
 
   - id: 3
-    object_color: "красный"
+    object_color: "красный паттерн"
     object_hex: "#E63946"
-    background: "тёмно-зелёный"
+    background: "тёмно-зелёный лес"
     background_hex: "#1B4332"
-    background_scene: "тёмный фон"
-    background_file: "plain_dark.png"
+    background_scene: "тёмный лесной фон"
+    background_file: "forest_dark.png"
     recommended: true
 
   - id: 4

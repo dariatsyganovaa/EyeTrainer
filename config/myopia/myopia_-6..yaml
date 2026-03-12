@@ -1,5 +1,5 @@
 disease: myopia
-level: -5
+level: -6
 dioptria_range: "более -6.25 диоптрий"
 description: "Близорукость высокой степени"
 
@@ -29,7 +29,7 @@ color_combinations:
   - id: 2
     object_color: "красный"
     object_hex: "#E63946"
-    background: "тёмно-синее ночное небо"
+    background: "ночное небо"
     background_hex: "#0D1B2A"
     background_scene: "ночной пейзаж"
     background_file: "sky_night_deep.png"
