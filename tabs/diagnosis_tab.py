@@ -82,19 +82,11 @@ class DiagnosisTab(QWidget):
 
         self._lay.addSpacing(8)
 
-        self._lay.addWidget(ResultCard(
-            title="Ожидание данных",
-            body="Здесь будут отображаться результаты из вкладок «Тестирование» и «Тренировка».",
-            note="Начните тестирование или выполните тренировочную программу.",
-            accent="#FFC107",
-        ))
-
         self._lay.addStretch()
         scroll.setWidget(self._inner)
         root.addWidget(scroll)
 
     def add_result(self, source: str, data: str):
-        """Вызывается из других вкладок для добавления результата."""
         self._lay.insertWidget(
             self._lay.count() - 1,
             ResultCard(
