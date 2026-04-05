@@ -1,0 +1,78 @@
+{
+  "survey_id": "primary_001",
+  "completed_at": "2026-04-05T15:38:24.459030",
+  "profile": {
+    "name": "",
+    "age": null,
+    "has_vision_problems": true,
+    "wears_glasses": true,
+    "disease_type": "myopia",
+    "disease_level": "unknown",
+    "interests": [
+      "nature"
+    ],
+    "training_format": "classic",
+    "color_scheme": "light"
+  },
+  "answers": [
+    {
+      "question_id": "q_name",
+      "question_text": "Введите ваше имя",
+      "answer": []
+    },
+    {
+      "question_id": "q_age",
+      "question_text": "Введите ваш возраст",
+      "answer": []
+    },
+    {
+      "question_id": "q_med_001",
+      "question_text": "Есть ли у вас проблемы со зрением?",
+      "answer": [
+        "Да"
+      ]
+    },
+    {
+      "question_id": "q_med_002",
+      "question_text": "Носите ли вы очки или линзы?",
+      "answer": [
+        "Да"
+      ]
+    },
+    {
+      "question_id": "q_disease_type",
+      "question_text": "Какое заболевание вам диагностировали?",
+      "answer": [
+        "myopia"
+      ]
+    },
+    {
+      "question_id": "q_disease_level",
+      "question_text": "Какая степень заболевания?",
+      "answer": [
+        "-1"
+      ]
+    },
+    {
+      "question_id": "q_int_001",
+      "question_text": "Выберите ваши интересы (влияет на фон упражнений):",
+      "answer": [
+        "nature"
+      ]
+    },
+    {
+      "question_id": "q_pref_001",
+      "question_text": "Предпочитаемый формат тренировок:",
+      "answer": [
+        "classic"
+      ]
+    },
+    {
+      "question_id": "q_pref_002",
+      "question_text": "Цветовая схема интерфейса:",
+      "answer": [
+        "light"
+      ]
+    }
+  ]
+}

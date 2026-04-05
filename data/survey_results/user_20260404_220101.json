@@ -1,0 +1,74 @@
+{
+  "survey_id": "primary_001",
+  "completed_at": "2026-04-04T19:01:01.637453",
+  "profile": {
+    "name": "",
+    "age": null,
+    "has_vision_problems": false,
+    "wears_glasses": false,
+    "disease_type": "hyperopia",
+    "disease_level": "-6",
+    "interests": [
+      "architecture"
+    ],
+    "training_format": "game",
+    "color_scheme": "dark"
+  },
+  "answers": [
+    {
+      "question_id": "q_name",
+      "question_text": "Введите ваше имя",
+      "answer": []
+    },
+    {
+      "question_id": "q_age",
+      "question_text": "Введите ваш возраст",
+      "answer": []
+    },
+    {
+      "question_id": "q_med_001",
+      "question_text": "Есть ли у вас проблемы со зрением?",
+      "answer": []
+    },
+    {
+      "question_id": "q_med_002",
+      "question_text": "Носите ли вы очки или линзы?",
+      "answer": []
+    },
+    {
+      "question_id": "q_disease_type",
+      "question_text": "Какое заболевание вам диагностировали?",
+      "answer": [
+        "Гиперметропия (дальнозоркость)"
+      ]
+    },
+    {
+      "question_id": "q_disease_level",
+      "question_text": "Какая степень заболевания?",
+      "answer": [
+        "Высокая (-6)"
+      ]
+    },
+    {
+      "question_id": "q_int_001",
+      "question_text": "Выберите ваши интересы (влияет на фон упражнений):",
+      "answer": [
+        "Архитектура"
+      ]
+    },
+    {
+      "question_id": "q_pref_001",
+      "question_text": "Предпочитаемый формат тренировок:",
+      "answer": [
+        "Игровой"
+      ]
+    },
+    {
+      "question_id": "q_pref_002",
+      "question_text": "Цветовая схема интерфейса:",
+      "answer": [
+        "Тёмная"
+      ]
+    }
+  ]
+}

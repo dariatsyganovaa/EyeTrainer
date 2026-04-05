@@ -85,6 +85,51 @@ QProgressBar::chunk {
     background-color: #5B8DEF;
     border-radius: 4px;
 }
+
+QLineEdit {
+    background: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 16px;
+}
+
+QRadioButton, QCheckBox {
+    font-size: 16px;
+    spacing: 12px;
+    padding: 6px 0px;
+    color: #eeeeee;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    background-color: #1a1a1a;
+    border: 2px solid #555555;
+}
+
+QRadioButton::indicator {
+    border-radius: 11px;
+}
+
+QCheckBox::indicator {
+    border-radius: 4px;
+}
+
+QCheckBox::indicator:hover, QRadioButton::indicator:hover {
+    border-color: #5B8DEF;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #5B8DEF;
+    border-color: #5B8DEF;
+}
+
+QRadioButton::indicator:checked {
+    background-color: #5B8DEF;
+    border: 5px solid #1a1a1a;
+}
 """
 
 
@@ -96,6 +141,7 @@ class EyeTrainerApp(QMainWindow):
         self.setStyleSheet(STYLE)
 
         self._processor = ResultProcessor()
+        self._current_user_id = None
 
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
@@ -109,14 +155,14 @@ class EyeTrainerApp(QMainWindow):
         self.tabs.addTab(self.tab_training, "  Тренировка    ")
 
         self.setCentralWidget(self.tabs)
+
         self.tab_testing.survey_finished.connect(self._on_survey_finished)
+        self.tabs.currentChanged.connect(self._on_tab_changed)
 
     def _on_survey_finished(self, survey_result):
-        print("SURVEY FINISHED")
-
         result = self._processor.process(survey_result)
 
-        print("RESULT:", result)
+        self._current_user_id = result.get("user_id")
 
         self.tab_diagnosis.add_result(
             source="Первичный опрос",
@@ -124,10 +170,14 @@ class EyeTrainerApp(QMainWindow):
         )
 
         plan = result["exercise_plan"]
-        if hasattr(self.tab_training, "apply_plan"):
-            self.tab_training.apply_plan(plan)
+        self.tab_training.apply_plan(plan, self._current_user_id)
 
         self.tabs.setCurrentIndex(1)
+
+    def _on_tab_changed(self, index):
+        if index == 2 and self._current_user_id:
+            if not self.tab_training._exercise_plan:
+                self.tab_training.load_plan_from_db(self._current_user_id)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Escape:
@@ -143,4 +193,3 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = EyeTrainerApp()
     sys.exit(app.exec())
-

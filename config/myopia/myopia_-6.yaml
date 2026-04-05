@@ -1,0 +1,85 @@
+disease: myopia
+level: -6
+dioptria_range: "более -6.25 диоптрий"
+description: "Близорукость высокой степени"
+
+color_perception:
+  deficit_level: "тяжёлый"
+  weak_colors:
+    - "жёлто-зелёный"
+    - "зелёный"
+    - "сине-зелёный"
+    - "циан"
+    - "синий"
+
+shape_perception:
+  dominant_shape: "вытянутый эллипсоид"
+  distortion: "дальние объекты совершенно не различимы, искажение прямых линий"
+
+color_combinations:
+  - id: 1
+    object_color: "насыщенный красный"
+    object_hex: "#C1121F"
+    background: "тёмный"
+    background_hex: "#1A1A2E"
+    background_scene: "тёмная тема"
+    background_file: "plain_dark.png"
+    recommended: true
+
+  - id: 2
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "ночное небо"
+    background_hex: "#0D1B2A"
+    background_scene: "ночной пейзаж"
+    background_file: "sky_night_deep.png"
+    recommended: true
+
+  - id: 3
+    object_color: "оранжево-красный"
+    object_hex: "#E76F51"
+    background: "тёплый закат"
+    background_hex: "#FFE8D6"
+    background_scene: "закатный пейзаж"
+    background_file: "sky_sunset_deep.png"
+    recommended: true
+
+  - id: 4
+    object_color: "насыщенный красный"
+    object_hex: "#C1121F"
+    background: "кремовый"
+    background_hex: "#FFF1E6"
+    background_scene: "абстрактный"
+    background_file: "plain_cream.png"
+    recommended: true
+
+  - id: 5
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "тёмно-коричневый"
+    background_hex: "#3D1C02"
+    background_scene: "абстрактный тёмный"
+    background_file: "plain_darkbrown.png"
+    recommended: true
+
+object:
+  shape_start: "эллипс (периферия)"
+  shape_end: "круг (центр — точка фиксации)"
+  size: "extra_large"
+  border: "очень жирный контур, максимальный контраст"
+  texture: "однородная"
+  exercise_mechanic: "периферийная фиксация"
+
+exercises:
+  - name: "circle_right"
+    speed: "very_slow"
+  - name: "horizontal"
+    speed: "very_slow"
+  - name: "vertical"
+    speed: "very_slow"
+  - name: "zigzag"
+    speed: "very_slow"
+  - name: "clock"
+    speed: "very_slow"
+  - name: "two_diagonals"
+    speed: "very_slow"

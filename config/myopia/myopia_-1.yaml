@@ -1,0 +1,83 @@
+disease: myopia
+level: -1
+dioptria_range: "до -1.0 диоптрии"
+description: "Близорукость очень слабой степени"
+
+color_perception:
+  deficit_level: "минимальный"
+  weak_colors:
+    - "зелёный (единичные отклонения)"
+
+shape_perception:
+  dominant_shape: "шаровидная форма"
+  secondary_shape: "вытянутый эллипсоид"
+  distortion: "лёгкое размытие контуров удалённых предметов"
+
+color_combinations:
+  - id: 1
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "белый"
+    background_hex: "#FFFFFF"
+    background_scene: "абстрактный"
+    background_file: "plain_white.png"
+    recommended: true
+
+  - id: 2
+    object_color: "оранжевый"
+    object_hex: "#F4A261"
+    background: "голубое небо"
+    background_hex: "#AEE6F8"
+    background_scene: "небесный пейзаж"
+    background_file: "sky_light_blue.png"
+    recommended: true
+
+  - id: 3
+    object_color: "жёлтый"
+    object_hex: "#E9C46A"
+    background: "светло-серый"
+    background_hex: "#F1F1F1"
+    background_scene: "абстрактный"
+    background_file: "plain_lightgray.png"
+    recommended: true
+
+  - id: 4
+    object_color: "красный"
+    object_hex: "#E63946"
+    background: "облачное небо"
+    background_hex: "#E8F4F8"
+    background_scene: "облачный пейзаж"
+    background_file: "sky_cloudy.png"
+    recommended: true
+
+  - id: 5
+    object_color: "оранжевый"
+    object_hex: "#F4A261"
+    background: "кремовый"
+    background_hex: "#FFF1E6"
+    background_scene: "абстрактный"
+    background_file: "plain_cream.png"
+    recommended: true
+
+
+object:
+  shape_start: "слегка вытянутый эллипс"
+  shape_end: "круг"
+  size: "medium"
+  border: "чёткий контур"
+  texture: "однородная"
+  exercise_mechanic: "аккомодационная гибкость"
+
+exercises:
+  - name: "circle_right"
+    speed: "medium"
+  - name: "horizontal"
+    speed: "medium"
+  - name: "vertical"
+    speed: "medium"
+  - name: "zigzag"
+    speed: "medium"
+  - name: "clock"
+    speed: "medium"
+  - name: "two_diagonals"
+    speed: "medium"

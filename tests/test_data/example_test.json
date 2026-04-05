@@ -1,102 +1,196 @@
 {
-    "survey_info": {
-        "survey_id": "primary_001",
-        "name": "Первичный опрос",
-        "description": "Сбор базовой информации о пользователе",
-        "duration": 30,
-        "sections": ["медицинская информация", "интересы", "предпочтения"]
-    },
-    "sections": [
+  "survey_info": {
+    "survey_id": "primary_001",
+    "name": "Первичный опрос",
+    "description": "Сбор базовой информации о пользователе",
+    "duration": 30
+  },
+  "sections": [
+    {
+      "section_id": "personal",
+      "title": "Личная информация",
+      "questions": [
         {
-            "section_id": "medical",
-            "title": "Медицинская информация",
-            "description": "Вопросы о здоровье глаз",
-            "questions": [
-                {
-                    "question_id": "q_med_001",
-                    "text": "Есть ли у вас проблемы со зрением?",
-                    "type": "boolean",
-                    "required": true
-                },
-                {
-                    "question_id": "q_med_002",
-                    "text": "Носите ли вы очки/линзы?",
-                    "type": "boolean",
-                    "required": true
-                },
-                {
-                    "question_id": "q_med_003",
-                    "text": "Какое из представленных заболеваний глаз у вас диагностировано?",
-                    "type": "single_choice",
-                    "options": [
-                        {"text": "Миопия слабой степени", "value": "miopia1"},
-                        {"text": "Миопия средней степени", "value": "miopia2"},
-                        {"text": "Миопия высокой степени", "value": "miopia3"},
-                        {"text": "Гиперметропия слабой степени", "value": "hyperopia1"},
-                        {"text": "Гиперметропия средней степени", "value": "hyperopia2"},
-                        {"text": "Гиперметропия высокой степени", "value": "hyperopia3"}
-                    ]
-                }
-            ]
+          "question_id": "q_name",
+          "text": "Введите ваше имя",
+          "type": "text"
         },
         {
-            "section_id": "interests",
-            "title": "Интересы и хобби",
-            "description": "Определение предпочтений пользователя",
-            "questions": [
-                {
-                    "question_id": "q_int_001",
-                    "text": "Выберите ваши интересы:",
-                    "type": "multiple_choice",
-                    "options": [
-                        {"text": "Природа", "value": "nature"},
-                        {"text": "Технологии", "value": "tech"},
-                        {"text": "Спорт", "value": "sport"},
-                        {"text": "Искусство", "value": "art"},
-                        {"text": "Архитектура", "value": "architecture"}
-                    ]
-                },
-                {
-                    "question_id": "q_int_002",
-                    "text": "Какое время суток вы предпочитаете для тренировок?",
-                    "type": "single_choice",
-                    "options": [
-                        {"text": "Утро", "value": "morning"},
-                        {"text": "День", "value": "day"},
-                        {"text": "Вечер", "value": "evening"}
-                    ]
-                }
-            ]
-        },
-        {
-            "section_id": "preferences",
-            "title": "Предпочтения",
-            "description": "Настройки отображения",
-            "questions": [
-                {
-                    "question_id": "q_pref_001",
-                    "text": "Предпочитаемый формат тренировок:",
-                    "type": "single_choice",
-                    "options": [
-                        {"text": "Классический", "value": "classic"},
-                        {"text": "Игровой", "value": "game"},
-                        {"text": "Интерактивный", "value": "interactive"}
-                    ]
-                },
-                {
-                    "question_id": "q_pref_002",
-                    "text": "Цветовая схема:",
-                    "type": "single_choice",
-                    "options": [
-                        {"text": "Светлая", "value": "light"},
-                        {"text": "Темная", "value": "dark"}
-                    ]
-                }
-            ]
+          "question_id": "q_age",
+          "text": "Введите ваш возраст",
+          "type": "text"
         }
-    ],
-    "metadata": {
-        "created_at": "2026-03-23T12:00:00Z",
-        "version": "1.0"
+      ]
+    },
+    {
+      "section_id": "medical",
+      "title": "Медицинская информация",
+      "questions": [
+        {
+          "question_id": "q_med_001",
+          "text": "Есть ли у вас проблемы со зрением?",
+          "type": "boolean"
+        },
+        {
+          "question_id": "q_med_002",
+          "text": "Носите ли вы очки или линзы?",
+          "type": "boolean"
+        },
+        {
+          "question_id": "q_disease_type",
+          "text": "Какое заболевание вам диагностировали?",
+          "type": "single_choice",
+          "options": [
+            {
+              "text": "Миопия (близорукость)",
+              "value": "myopia"
+            },
+            {
+              "text": "Гиперметропия (дальнозоркость)",
+              "value": "hyperopia"
+            },
+            {
+              "text": "Нет диагноза",
+              "value": "healthy"
+            }
+          ]
+        },
+        {
+          "question_id": "q_disease_level",
+          "text": "Какая степень заболевания?",
+          "type": "single_choice",
+          "options": [],
+          "skip_if": {
+            "question_id": "q_disease_type",
+            "values": [
+              "healthy"
+            ]
+          },
+          "options_if": {
+            "q_disease_type": {
+              "myopia": [
+                {
+                  "text": "Слабая (-1)",
+                  "value": "-1"
+                },
+                {
+                  "text": "Слабая (-2)",
+                  "value": "-2"
+                },
+                {
+                  "text": "Средняя (-3)",
+                  "value": "-3"
+                },
+                {
+                  "text": "Средняя (-4)",
+                  "value": "-4"
+                },
+                {
+                  "text": "Высокая (-5)",
+                  "value": "-5"
+                },
+                {
+                  "text": "Высокая (-6)",
+                  "value": "-6"
+                }
+              ],
+              "hyperopia": [
+                {
+                  "text": "Слабая (+1)",
+                  "value": "+1"
+                },
+                {
+                  "text": "Слабая (+2)",
+                  "value": "+2"
+                },
+                {
+                  "text": "Средняя (+3)",
+                  "value": "+3"
+                },
+                {
+                  "text": "Средняя (+4)",
+                  "value": "+4"
+                },
+                {
+                  "text": "Высокая (+5)",
+                  "value": "+5"
+                },
+                {
+                  "text": "Высокая (+6)",
+                  "value": "+6"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section_id": "interests",
+      "title": "Интересы и предпочтения",
+      "questions": [
+        {
+          "question_id": "q_int_001",
+          "text": "Выберите ваши интересы (влияет на фон упражнений):",
+          "type": "multiple_choice",
+          "options": [
+            {
+              "text": "Природа",
+              "value": "nature"
+            },
+            {
+              "text": "Технологии",
+              "value": "tech"
+            },
+            {
+              "text": "Спорт",
+              "value": "sport"
+            },
+            {
+              "text": "Искусство",
+              "value": "art"
+            },
+            {
+              "text": "Архитектура",
+              "value": "architecture"
+            }
+          ]
+        },
+        {
+          "question_id": "q_pref_001",
+          "text": "Предпочитаемый формат тренировок:",
+          "type": "single_choice",
+          "options": [
+            {
+              "text": "Классический",
+              "value": "classic"
+            },
+            {
+              "text": "Игровой",
+              "value": "game"
+            },
+            {
+              "text": "Интерактивный",
+              "value": "interactive"
+            }
+          ]
+        },
+        {
+          "question_id": "q_pref_002",
+          "text": "Цветовая схема интерфейса:",
+          "type": "single_choice",
+          "options": [
+            {
+              "text": "Светлая",
+              "value": "light"
+            },
+            {
+              "text": "Тёмная",
+              "value": "dark"
+            }
+          ]
+        }
+      ]
     }
+  ]
 }

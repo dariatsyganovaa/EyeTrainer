@@ -1,6 +1,7 @@
+from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
-    QCheckBox, QRadioButton, QButtonGroup
+    QCheckBox, QRadioButton, QButtonGroup, QLineEdit, QLabel
 )
 from PySide6.QtCore import Signal
 from .ui_testing_tab import Ui_Form as Ui_TestingTab
@@ -8,11 +9,11 @@ from .ui_control_panel import Ui_Form as Ui_ControlPanel
 from utils.data_loader import SurveyLoader
 from utils.result_processor import SurveyResult, SurveyAnswer
 
+SKIP_LEVEL_FOR = {"healthy", ""}
+
 
 class TestingTab(QWidget):
     survey_finished = Signal(object)
-
-    SURVEY_PATH = "tests/test_data/example_test.json"
 
     def __init__(self):
         super().__init__()
@@ -41,6 +42,7 @@ class TestingTab(QWidget):
         self.answers = {}
         self.button_group = None
         self._survey_id = ""
+        self._text_input = None
 
         self.ui.groupBox.setVisible(False)
         self.ui.labelProgress.setVisible(False)
@@ -51,9 +53,70 @@ class TestingTab(QWidget):
         self.cp.btnNext.clicked.connect(self._on_next)
         self.cp.btnFinish.clicked.connect(self._on_finish)
 
+    def _should_skip(self, q: dict) -> bool:
+        skip_if = q.get("skip_if")
+        if skip_if:
+            dep_qid = skip_if.get("question_id")
+            skip_values = skip_if.get("values", [])
+            for ans in self.answers.values():
+                if ans.question_id == dep_qid:
+                    if ans.answer and ans.answer[0] in skip_values:
+                        return True
+                    break
+
+        options_if = q.get("options_if")
+        if options_if:
+            opts = self._get_options(q)
+            if not opts:
+                return True
+
+        return False
+
+    def _get_options(self, q: dict) -> list:
+        options_if = q.get("options_if")
+        if options_if:
+            for dep_qid, mapping in options_if.items():
+                for ans in self.answers.values():
+                    if ans.question_id == dep_qid and ans.answer:
+                        chosen = ans.answer[0]
+                        if chosen in mapping:
+                            return mapping[chosen]
+            return []
+        raw = q.get("options", [])
+        return raw
+
+    def _next_valid_idx(self, from_idx: int, direction: int = 1) -> int:
+        idx = from_idx + direction
+        while 0 <= idx < len(self.questions):
+            if not self._should_skip(self.questions[idx]):
+                return idx
+            idx += direction
+        return idx
+
+    def _visible_count(self) -> int:
+        return sum(1 for q in self.questions if not self._should_skip(q))
+
+    def _visible_position(self) -> int:
+        pos = 0
+        for i, q in enumerate(self.questions):
+            if not self._should_skip(q):
+                pos += 1
+            if i == self.current_idx:
+                return pos
+        return pos
+
     def _on_start(self):
         loader = SurveyLoader()
-        survey = loader.load(self.SURVEY_PATH)
+        current_dir = Path(__file__).resolve().parent
+        project_root = current_dir.parent.parent
+        abs_survey_path = project_root / "tests" / "test_data" / "example_test.json"
+
+        if not abs_survey_path.exists():
+            print(f"[TestingTab] Файл с тестом не найден: {abs_survey_path}")
+            self.ui.labelQuestion.setText(f"Ошибка: Файл с вопросами не найден!\n{abs_survey_path}")
+            return
+
+        survey = loader.load(str(abs_survey_path))
 
         self._survey_id = survey.get("survey_info", {}).get("survey_id", "unknown")
         self.questions = loader.get_all_questions(survey)
@@ -61,8 +124,11 @@ class TestingTab(QWidget):
         self.answers = {}
 
         if not self.questions:
-            self.ui.labelQuestion.setText("Нет вопросов в тесте.")
+            self.ui.labelQuestion.setText("Нет вопросов в тесте!")
             return
+
+        if self._should_skip(self.questions[0]):
+            self.current_idx = self._next_valid_idx(-1, 1)
 
         self.ui.btnStart.setVisible(False)
         self.ui.groupBox.setVisible(True)
@@ -73,14 +139,16 @@ class TestingTab(QWidget):
 
     def _on_prev(self):
         self._save_answer()
-        if self.current_idx > 0:
-            self.current_idx -= 1
+        idx = self._next_valid_idx(self.current_idx, -1)
+        if 0 <= idx < len(self.questions):
+            self.current_idx = idx
             self._show_question()
 
     def _on_next(self):
         self._save_answer()
-        if self.current_idx < len(self.questions) - 1:
-            self.current_idx += 1
+        idx = self._next_valid_idx(self.current_idx, 1)
+        if 0 <= idx < len(self.questions):
+            self.current_idx = idx
             self._show_question()
 
     def _on_finish(self):
@@ -89,32 +157,46 @@ class TestingTab(QWidget):
 
     def _show_question(self):
         q = self.questions[self.current_idx]
-        total = len(self.questions)
+        total = self._visible_count()
+        pos = self._visible_position()
 
-        self.ui.progressBar.setValue(int((self.current_idx / total) * 100))
-        self.ui.labelProgress.setText(f"Вопрос {self.current_idx + 1} из {total}")
+        self.ui.progressBar.setValue(int((pos / total) * 100))
+        self.ui.labelProgress.setText(f"Вопрос {pos} из {total}")
         self.ui.labelTitle.setText(q.get("_section_title", ""))
         self.ui.labelQuestion.setText(q.get("text", ""))
 
-        self.cp.btnPrev.setEnabled(self.current_idx > 0)
-        self.cp.btnNext.setVisible(self.current_idx < total - 1)
-        self.cp.btnFinish.setVisible(self.current_idx == total - 1)
+        next_idx = self._next_valid_idx(self.current_idx, 1)
+        prev_idx = self._next_valid_idx(self.current_idx, -1)
+        has_next = 0 <= next_idx < len(self.questions)
+        has_prev = 0 <= prev_idx < len(self.questions)
+
+        self.cp.btnPrev.setEnabled(has_prev)
+        self.cp.btnNext.setVisible(has_next)
+        self.cp.btnFinish.setVisible(not has_next)
 
         self._clear_answers()
 
         q_type = q.get("type", "single_choice")
-        raw_opts = q.get("options", [])
-        options = [o["text"] if isinstance(o, dict) else o for o in raw_opts]
-        saved = self.answers.get(self.current_idx, [])
+        options = self._get_options(q)
+        opts = [o["text"] if isinstance(o, dict) else o for o in options]
+        saved = self.answers.get(self.current_idx)
 
-        if q_type == "multiple_choice":
-            self._build_checkboxes(options, saved)
+        if q_type == "text":
+            self._build_text_input(saved)
         elif q_type == "boolean":
-            self._build_radio(["Да", "Нет"], saved)
-        elif q_type == "text":
-            pass
+            self._build_radio(["Да", "Нет"], saved.answer if saved else [])
+        elif q_type == "multiple_choice":
+            self._build_checkboxes(opts, saved.answer if saved else [])
         else:
-            self._build_radio(options, saved)
+            self._build_radio(opts, saved.answer if saved else [])
+
+    def _build_text_input(self, saved=None):
+        self._text_input = QLineEdit()
+        self._text_input.setPlaceholderText("Введите ответ...")
+        if saved and saved.answer:
+            self._text_input.setText(saved.answer[0])
+        self.ui.answersLayout.addWidget(self._text_input)
+        self.ui.answersLayout.addStretch()
 
     def _build_radio(self, options, saved):
         self.button_group = QButtonGroup(self)
@@ -122,22 +204,6 @@ class TestingTab(QWidget):
             rb = QRadioButton(opt)
             if opt in saved:
                 rb.setChecked(True)
-
-            rb.setStyleSheet("""
-                        QRadioButton {
-                            font-size: 18px;
-                            padding: 10px;
-                        }
-                        QRadioButton::indicator {
-                            width: 18px;
-                            height: 18px;
-                        }
-                        QRadioButton:hover {
-                            background-color: #2a2a2a;
-                            border-radius: 8px;
-                        }
-                    """)
-
             self.button_group.addButton(rb, i)
             self.ui.answersLayout.addWidget(rb)
         self.ui.answersLayout.addStretch()
@@ -148,21 +214,6 @@ class TestingTab(QWidget):
             cb = QCheckBox(opt)
             if opt in saved:
                 cb.setChecked(True)
-
-            cb.setStyleSheet("""
-                        QCheckBox {
-                            font-size: 18px;
-                            padding: 10px;
-                        }
-                        QCheckBox::indicator {
-                            width: 18px;
-                            height: 18px;
-                        }
-                        QCheckBox:hover {
-                            background-color: #2a2a2a;
-                            border-radius: 8px;
-                        }
-                    """)
             self.ui.answersLayout.addWidget(cb)
         self.ui.answersLayout.addStretch()
 
@@ -173,18 +224,34 @@ class TestingTab(QWidget):
             if item.widget():
                 item.widget().deleteLater()
         self.button_group = None
+        self._text_input  = None
 
     def _save_answer(self):
         q = self.questions[self.current_idx]
-        layout = self.ui.answersLayout
-        selected = []
-        for i in range(layout.count()):
-            item = layout.itemAt(i)
-            if not item:
-                continue
-            w = item.widget()
-            if isinstance(w, (QRadioButton, QCheckBox)) and w.isChecked():
-                selected.append(w.text())
+        q_type = q.get("type", "single_choice")
+
+        if q_type == "text" and self._text_input:
+            text = self._text_input.text().strip()
+            selected = [text] if text else []
+        else:
+            layout = self.ui.answersLayout
+            selected = []
+
+            raw_opts = self._get_options(q)
+            text_to_value = {}
+            for o in raw_opts:
+                if isinstance(o, dict) and "value" in o:
+                    text_to_value[o.get("text", "")] = o["value"]
+
+            for i in range(layout.count()):
+                item = layout.itemAt(i)
+                if not item:
+                    continue
+                w = item.widget()
+                if isinstance(w, (QRadioButton, QCheckBox)) and w.isChecked():
+                    txt = w.text()
+                    selected.append(text_to_value.get(txt, txt))
+
         self.answers[self.current_idx] = SurveyAnswer(
             question_id = q.get("question_id", f"q_{self.current_idx}"),
             question_text = q.get("text", ""),
@@ -192,9 +259,15 @@ class TestingTab(QWidget):
         )
 
     def _finish(self):
+        all_answers = []
+        for idx, ans in self.answers.items():
+            if idx < len(self.questions):
+                if not self._should_skip(self.questions[idx]):
+                    all_answers.append(ans)
+
         result = SurveyResult(
             survey_id = self._survey_id,
-            answers = list(self.answers.values()),
+            answers = all_answers,
         )
         self.survey_finished.emit(result)
 
