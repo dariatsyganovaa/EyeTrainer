@@ -1,26 +1,16 @@
+import random
 from dataclasses import dataclass, field
 from typing import Optional
 from .config_loader import ConfigLoader, DiseaseConfig
 
-
 DISEASE_KEYWORDS = {
-    "myopia": ["миопия", "близорукость", "myopia"],
-    "hyperopia": ["гиперметропия", "дальнозоркость", "hyperopia"],
+    "myopia":["миопия", "близорукость", "myopia"],
+    "hyperopia":["гиперметропия", "дальнозоркость", "hyperopia"],
 }
 
 MYOPIA_LEVELS    = {"-1", "-2", "-3", "-4", "-5", "-6"}
 HYPEROPIA_LEVELS = {"+1", "+2", "+3", "+4", "+5", "+6"}
 
-MYOPIA_LEVEL_MAP = {
-    "слабая (-1)": "-1", "слабая (-2)": "-2",
-    "средняя (-3)": "-3", "средняя (-4)": "-4",
-    "высокая (-5)": "-5", "высокая (-6)": "-6",
-}
-HYPEROPIA_LEVEL_MAP = {
-    "слабая (+1)": "+1", "слабая (+2)": "+2",
-    "средняя (+3)": "+3", "средняя (+4)": "+4",
-    "высокая (+5)": "+5", "высокая (+6)": "+6",
-}
 
 @dataclass
 class ExercisePlan:
@@ -28,7 +18,7 @@ class ExercisePlan:
     disease: str
     level: str
     config: Optional[DiseaseConfig]
-    background_file: str = "plain_white.png"
+    background_file: str = "star"
     object_hex: str = "#FFFFFF"
     object_scale: float = 1.0
     speed_ms: int = 30
@@ -51,6 +41,15 @@ class ExercisePlan:
 
 
 class PlanBuilder:
+
+    SCENE_MAP = {
+            "nature":    ["butterfly", "bug"], # Фон: grass.png
+            "transport": ["plane", "boat"],    # Фон: sky.png / water.png
+            "space":     ["star", "plane"],    # Фон: night-sky.png
+            "animals":   ["mouse"],            # Фон: floor.png
+            "sea":       ["bubble", "boat"]    # Фон: underwater.png / water.png
+    }
+
     def __init__(self):
         self._loader = ConfigLoader()
 
@@ -60,35 +59,36 @@ class PlanBuilder:
 
         plan = ExercisePlan(user_id=user_id, disease=disease, level=level, config=config)
 
+        interests = survey_answers.get("q_int_001", [])
+        possible_scenes = []
+        for key in interests:
+            possible_scenes.extend(self.SCENE_MAP.get(key, []))
+
+        possible_scenes = list(set(possible_scenes))
+        chosen_scene = random.choice(possible_scenes) if possible_scenes else "star"
+
         if config:
-            plan.background_file = config.primary_color.background_file
-            plan.object_hex = config.primary_color.object_hex
+            chosen_color = random.choice(config.colors) if config.colors else None
+
+            plan.background_file = chosen_scene
+            plan.object_hex = chosen_color.object_hex if chosen_color else "#FFFFFF"
             plan.object_scale = config.object_scale
             plan.speed_ms = config.speed_ms
             plan.mechanic = config.object.exercise_mechanic
-            plan.exercises = [
-                {"name": e.name, "speed": e.speed}
-                for e in config.exercises
-            ]
+            plan.exercises = [{"name": e.name, "speed": e.speed} for e in config.exercises]
             plan.notes = self._build_notes(config)
         else:
             plan = self._default_plan(user_id, disease, level)
+            plan.background_file = chosen_scene
 
         return plan
 
     def _detect_disease(self, answers: dict) -> tuple:
-        disease_type = self._get_answer(answers, "q_disease_type")
-        if disease_type in ("myopia", "hyperopia"):
-            level = self._detect_level(disease_type, answers)
-            return disease_type, level
-
-        diagnosis_text = self._get_answer(answers, "q_med_003", "").lower()
-        for disease, keywords in DISEASE_KEYWORDS.items():
-            if any(kw in diagnosis_text for kw in keywords):
-                level = self._detect_level(disease, answers)
-                return disease, level
-
-        return "healthy", "0"
+        disease_type = answers.get("q_disease_type", ["myopia"])[0]
+        if disease_type not in ("myopia", "hyperopia"):
+            return "myopia", "-1"
+        level = answers.get("q_disease_level", ["-1"])[0]
+        return disease_type, level
 
     def _detect_level(self, disease: str, answers: dict) -> str:
         raw = self._get_answer(answers, "q_disease_level", "")
@@ -98,18 +98,15 @@ class PlanBuilder:
         if disease == "hyperopia" and raw in HYPEROPIA_LEVELS:
             return raw
 
-        raw_lower = raw.lower()
         if disease == "myopia":
-            return MYOPIA_LEVEL_MAP.get(raw_lower, "-1")
-        elif disease == "hyperopia":
-            return HYPEROPIA_LEVEL_MAP.get(raw_lower, "+1")
-        return "0"
+            return "-1"
+        return "+1"
 
     @staticmethod
     def _build_notes(config: DiseaseConfig) -> list:
         speed = config.exercises[0].speed if config.exercises else "medium"
         speed_ru = {"very_slow": "очень медленно", "slow": "медленно", "medium": "стандартно"}.get(speed, speed)
-        return [
+        return[
             f"Скорость: {speed_ru}",
             f"Механика: {config.object.exercise_mechanic}",
             f"Размер объекта: {config.object.size}",
@@ -124,10 +121,10 @@ class PlanBuilder:
                 {"name": "horizontal", "speed": "medium"},
                 {"name": "vertical", "speed": "medium"},
             ],
-            notes=["Стандартная профилактическая программа"],
+            notes=["Стандартная программа"],
         )
 
     @staticmethod
     def _get_answer(answers: dict, key: str, default: str = "") -> str:
-        val = answers.get(key, [])
+        val = answers.get(key,[])
         return val[0] if val else default

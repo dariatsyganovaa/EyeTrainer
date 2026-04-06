@@ -9,7 +9,7 @@ from .ui_control_panel import Ui_Form as Ui_ControlPanel
 from utils.data_loader import SurveyLoader
 from utils.result_processor import SurveyResult, SurveyAnswer
 
-SKIP_LEVEL_FOR = {"healthy", ""}
+SKIP_LEVEL_FOR = {"other", ""}
 
 
 class TestingTab(QWidget):

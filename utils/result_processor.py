@@ -4,51 +4,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
-
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "survey_results")
 
-BOOL_YES = {"да", "yes"}
-
-INTERESTS_MAP = {
-    "Природа": "nature",
-    "Технологии": "tech",
-    "Спорт": "sport",
-    "Искусство": "art",
-    "Архитектура": "architecture",
-}
-
-FORMAT_MAP = {
-    "Классический": "classic",
-    "Игровой": "game",
-    "Интерактивный": "interactive",
-}
-
-SCHEME_MAP = {
-    "Светлая": "light",
-    "Тёмная": "dark",
-}
-
-DISEASE_VALUE_MAP = {
-    "Миопия (близорукость)": "myopia",
-    "Гиперметропия (дальнозоркость)": "hyperopia",
-    "Нет диагноза": "healthy",
-}
-
-LEVEL_VALUE_MAP = {
-    "Слабая (-1)": "-1",
-    "Слабая (-2)": "-2",
-    "Средняя (-3)": "-3",
-    "Средняя (-4)": "-4",
-    "Высокая (-5)": "-5",
-    "Высокая (-6)": "-6",
-    "Слабая (+1)": "+1",
-    "Слабая (+2)": "+2",
-    "Средняя (+3)": "+3",
-    "Средняя (+4)": "+4",
-    "Высокая (+5)": "+5",
-    "Высокая (+6)": "+6",
-    "Не знаю": "unknown",
-}
+BOOL_YES = {"да", "yes", "true", "1"}
 
 
 @dataclass
@@ -70,13 +28,13 @@ class UserProfile:
     user_id: Optional[int] = None
     name: str = ""
     age: Optional[int] = None
-    has_vision_problems: bool = False
+    has_vision_problems: bool = True
     wears_glasses: bool = False
-    disease_type: str = "healthy"
-    disease_level: str = "0"
+    disease_type: str = "myopia"
+    disease_level: str = "-1"
     interests: list = field(default_factory=list)
-    training_format: str = ""
-    color_scheme: str = ""
+    training_format: str = "classic"
+    color_scheme: str = "dark"
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
@@ -116,29 +74,26 @@ class ResultProcessor:
                     profile.age = int(values[0]) if values else None
                 except ValueError:
                     profile.age = None
-            elif qid == "q_med_001":
-                profile.has_vision_problems = self._to_bool(values)
             elif qid == "q_med_002":
                 profile.wears_glasses = self._to_bool(values)
             elif qid == "q_disease_type":
-                v = values[0] if values else ""
-                profile.disease_type = DISEASE_VALUE_MAP.get(v, v.lower())
+                profile.disease_type = values[0] if values else "myopia"
             elif qid == "q_disease_level":
-                v = values[0] if values else ""
-                profile.disease_level = LEVEL_VALUE_MAP.get(v, "unknown")
+                profile.disease_level = values[0] if values else "-1"
             elif qid == "q_int_001":
-                profile.interests = [ INTERESTS_MAP.get(v, v.lower()) for v in values ]
+                profile.interests = values
             elif qid == "q_pref_001":
-                v = values[0] if values else ""
-                profile.training_format = FORMAT_MAP.get(v, v.lower())
+                profile.training_format = values[0] if values else "classic"
             elif qid == "q_pref_002":
-                v = values[0] if values else ""
-                profile.color_scheme = SCHEME_MAP.get(v, v.lower())
+                profile.color_scheme = values[0] if values else "dark"
         return profile
 
     @staticmethod
     def _to_bool(values: list) -> bool:
-        return bool(values) and values[0].strip().lower() in BOOL_YES
+        if not values:
+            return False
+        val = str(values[0]).strip().lower()
+        return val in BOOL_YES
 
     def _build_plan(self, profile: UserProfile, result: SurveyResult) -> dict:
         try:
@@ -147,7 +102,7 @@ class ResultProcessor:
                 ans.question_id: ans.answer
                 for ans in result.answers
             }
-            answers_dict["q_disease_type"] = [profile.disease_type]
+            answers_dict["q_disease_type"] =[profile.disease_type]
             answers_dict["q_disease_level"] = [profile.disease_level]
             builder = PlanBuilder()
             plan = builder.build(profile.user_id, answers_dict)
@@ -165,7 +120,7 @@ class ResultProcessor:
             "object_hex": "#FFFFFF",
             "object_scale": 1.0,
             "speed_ms": 30,
-            "exercises": [
+            "exercises":[
                 {"name": "circle_right", "speed": "medium"},
                 {"name": "horizontal",   "speed": "medium"},
             ],
@@ -194,7 +149,7 @@ class ResultProcessor:
                     "training_format": profile.training_format,
                     "color_scheme": profile.color_scheme,
                 },
-                "answers": [
+                "answers":[
                     {
                         "question_id": a.question_id,
                         "question_text": a.question_text,
@@ -243,15 +198,34 @@ class ResultProcessor:
 
     @staticmethod
     def _make_summary(profile: UserProfile, plan: dict) -> str:
+        DISEASE_RU = {"myopia": "Миопия", "hyperopia": "Гиперметропия"}
+        INTERESTS_RU = {
+            "nature": "Природа", "transport": "Транспорт",
+            "space": "Космос", "animals": "Животные", "sea": "Море"
+        }
+        SCENE_DISPLAY_RU = {
+            "boat": "Катер в море", "bubble": "Пузыри под водой",
+            "bug": "Жук в траве", "butterfly": "Бабочка в траве",
+            "mouse": "Мышонок на полу", "plane": "Самолет в небе",
+            "star": "Звезды в космосе"
+        }
+
         lines = []
         if profile.name:
-            lines.append(f"Пользователь: {profile.name}" + (f", {profile.age} лет" if profile.age else ""))
-        lines.append(f"Диагноз: {profile.disease_type} {profile.disease_level}")
-        lines.append(f"Очки/линзы: {'Да' if profile.wears_glasses else 'Нет'}")
+            lines.append(f"Пользователь: {profile.name}")
+
+        lines.append(f"Диагноз: {DISEASE_RU.get(profile.disease_type)} {profile.disease_level}")
+
         if profile.interests:
-            lines.append(f"Интересы: {', '.join(profile.interests)}")
-        lines.append("─" * 30)
+            ints = ", ".join(INTERESTS_RU.get(i, i) for i in profile.interests)
+            lines.append(f"Интересы: {ints}")
+
+        lines.append("─" * 28)
+
+        scene_id = plan.get("background", "star")
+        lines.append(f"Сцена: {SCENE_DISPLAY_RU.get(scene_id, scene_id)}")
+
         for note in plan.get("notes", []):
             lines.append(f"• {note}")
-        lines.append(f"Фон: {plan.get('background', '—')}")
+
         return "\n".join(lines)

@@ -153,6 +153,30 @@ class LaunchButton(QPushButton):
         self.setGraphicsEffect(_shadow(20, 6, 100))
 
 class TrainingTab(QWidget):
+    SCENE_RU = {
+        "boat": "Катер",
+        "bubble": "Пузырек",
+        "bug": "Жук",
+        "butterfly": "Бабочка",
+        "mouse": "Мышонок",
+        "plane": "Самолет",
+        "star": "Звезда"
+    }
+
+    DISEASE_RU = {
+        "myopia": "Миопия",
+        "hyperopia": "Гиперметропия"
+    }
+
+    BACKGROUND_RU = {
+        "floor.png": "Паркет",
+        "grass.png": "Трава",
+        "night_sky.png": "Ночное небо",
+        "sky.png": "Небо",
+        "underwater.png": "Подводный мир",
+        "water.png": "Спокойное море",
+    }
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._exercise_plan   = {}
@@ -280,42 +304,40 @@ class TrainingTab(QWidget):
         disease = plan.get("disease", "")
         level = plan.get("level", "")
 
-        if disease and disease != "healthy":
-            self._subtitle.setText(
-                f"Персональный план  ·  {disease.capitalize()}  {level}"
-            )
+        disease_ru = self.DISEASE_RU.get(disease, disease.capitalize())
+
+        scene_name = plan.get("background", "star")
+        scene_ru = self.SCENE_RU.get(scene_name, scene_name)
+
+        if disease:
+            self._subtitle.setText(f"Персональный план  ·  {disease_ru}  {level}")
 
         self._clear_grid()
+
         params = [
-            ("Диагноз", f"{disease} {level}", "#5B8DEF"),
-            ("Фон", plan.get("background", "—"), "#7C5CBF"),
-            ("Объект", plan.get("object_hex", "—"), "#3DB87A"),
-            ("Масштаб", str(plan.get("object_scale", 1.0)), "#F4A261"),
-            ("Скорость", f"{plan.get('speed_ms', 30)} мс", "#E63946"),
+            ("Диагноз", f"{disease_ru} {level}", "#5B8DEF"),
+            ("Сцена", scene_ru, "#7C5CBF"),
             ("Механика", plan.get("mechanic", "—"), "#48CAE4"),
         ]
+
         for i, (label, value, accent) in enumerate(params):
             card = ParamCard(label, value, accent)
-            self._params_grid.addWidget(card, i // 3, i % 3)
+            self._params_grid.addWidget(card, 0, i)
 
         self._params_frame.setVisible(True)
 
         self._clear_exercises()
-        exercises = plan.get("exercises", [])
+        exercises = plan.get("exercises",[])
         self._ex_count.setText(f"{len(exercises)} упражнений")
         for i, ex in enumerate(exercises, 1):
             card = ExerciseCard(ex, i)
             self._exercises_lay.addWidget(card)
         self._exercises_frame.setVisible(bool(exercises))
 
-        notes = plan.get("notes", [])
+        notes = plan.get("notes",[])
         if notes:
             self._notes_label.setText("\n".join(f"• {n}" for n in notes))
             self._notes_frame.setVisible(True)
-
-        print(f"[TrainingTab] план: {disease} {level}, "
-              f"фон={plan.get('background')}, "
-              f"скорость={plan.get('speed_ms')}мс")
 
     def _clear_grid(self):
         while self._params_grid.count():

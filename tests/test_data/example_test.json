@@ -5,11 +5,11 @@
     "description": "Сбор базовой информации о пользователе",
     "duration": 30
   },
-  "sections": [
+  "sections":[
     {
       "section_id": "personal",
       "title": "Личная информация",
-      "questions": [
+      "questions":[
         {
           "question_id": "q_name",
           "text": "Введите ваше имя",
@@ -25,12 +25,7 @@
     {
       "section_id": "medical",
       "title": "Медицинская информация",
-      "questions": [
-        {
-          "question_id": "q_med_001",
-          "text": "Есть ли у вас проблемы со зрением?",
-          "type": "boolean"
-        },
+      "questions":[
         {
           "question_id": "q_med_002",
           "text": "Носите ли вы очки или линзы?",
@@ -40,7 +35,7 @@
           "question_id": "q_disease_type",
           "text": "Какое заболевание вам диагностировали?",
           "type": "single_choice",
-          "options": [
+          "options":[
             {
               "text": "Миопия (близорукость)",
               "value": "myopia"
@@ -50,8 +45,8 @@
               "value": "hyperopia"
             },
             {
-              "text": "Нет диагноза",
-              "value": "healthy"
+              "text": "Другое",
+              "value": "other"
             }
           ]
         },
@@ -59,16 +54,16 @@
           "question_id": "q_disease_level",
           "text": "Какая степень заболевания?",
           "type": "single_choice",
-          "options": [],
+          "options":[],
           "skip_if": {
             "question_id": "q_disease_type",
-            "values": [
-              "healthy"
+            "values":[
+              "other"
             ]
           },
           "options_if": {
             "q_disease_type": {
-              "myopia": [
+              "myopia":[
                 {
                   "text": "Слабая (-1)",
                   "value": "-1"
@@ -94,7 +89,7 @@
                   "value": "-6"
                 }
               ],
-              "hyperopia": [
+              "hyperopia":[
                 {
                   "text": "Слабая (+1)",
                   "value": "+1"
@@ -128,39 +123,24 @@
     {
       "section_id": "interests",
       "title": "Интересы и предпочтения",
-      "questions": [
+      "questions":[
         {
           "question_id": "q_int_001",
-          "text": "Выберите ваши интересы (влияет на фон упражнений):",
+          "text": "Выберите темы, которые вам нравятся:",
           "type": "multiple_choice",
           "options": [
-            {
-              "text": "Природа",
-              "value": "nature"
-            },
-            {
-              "text": "Технологии",
-              "value": "tech"
-            },
-            {
-              "text": "Спорт",
-              "value": "sport"
-            },
-            {
-              "text": "Искусство",
-              "value": "art"
-            },
-            {
-              "text": "Архитектура",
-              "value": "architecture"
-            }
+            { "text": "Живая природа", "value": "nature" },
+            { "text": "Авиация и транспорт", "value": "transport" },
+            { "text": "Космос и звезды", "value": "space" },
+            { "text": "Животные", "value": "animals" },
+            { "text": "Водная тематика", "value": "sea" }
           ]
         },
         {
           "question_id": "q_pref_001",
           "text": "Предпочитаемый формат тренировок:",
           "type": "single_choice",
-          "options": [
+          "options":[
             {
               "text": "Классический",
               "value": "classic"
@@ -179,7 +159,7 @@
           "question_id": "q_pref_002",
           "text": "Цветовая схема интерфейса:",
           "type": "single_choice",
-          "options": [
+          "options":[
             {
               "text": "Светлая",
               "value": "light"
