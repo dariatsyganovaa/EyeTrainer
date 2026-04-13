@@ -117,7 +117,6 @@ class ResultProcessor:
             "scene": "star",
             "object_scale": 1.0,
             "speed_ms": 30,
-            "mechanic": "",
             "exercises":[
                 {"name": "circle_right", "speed": "medium"},
                 {"name": "horizontal",   "speed": "medium"},
@@ -231,7 +230,5 @@ class ResultProcessor:
         if scene_ru:
             lines.append(f"Сцена: {scene_ru}")
 
-        for note in plan.get("notes", []):
-            lines.append(f"• {note}")
 
         return "\n".join(lines)

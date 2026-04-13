@@ -163,6 +163,14 @@ class TrainingTab(QWidget):
         "star": "Звезда"
     }
 
+    BL_RU = {
+        "Healthy": "Нет нарушений",
+        "Deuteranopia": "Дейтеранопия",
+        "Protanopia": "Протанопия",
+        "Tritanopia": "Тританопия",
+        "Achromatopsia": "Ахроматопсия",
+    }
+
     DISEASE_RU = {
         "myopia": "Миопия",
         "hyperopia": "Гиперметропия"
@@ -208,11 +216,6 @@ class TrainingTab(QWidget):
         self._title.setFont(QFont("Segoe UI", 28, QFont.Weight.Bold))
         self._title.setStyleSheet("color: #ffffff; background: transparent;")
         title_col.addWidget(self._title)
-
-        self._subtitle = QLabel("Пройдите тестирование для загрузки персонального плана")
-        self._subtitle.setFont(QFont("Segoe UI", 11))
-        self._subtitle.setStyleSheet("color: #444; background: transparent;")
-        title_col.addWidget(self._subtitle)
 
         header.addLayout(title_col, stretch=1)
 
@@ -268,31 +271,6 @@ class TrainingTab(QWidget):
         lay.addWidget(self._exercises_frame)
         lay.addSpacing(32)
 
-        self._notes_frame = QFrame()
-        self._notes_frame.setVisible(False)
-        self._notes_frame.setStyleSheet("""
-            QFrame {
-                background: #0d1f35;
-                border-radius: 14px;
-            }
-        """)
-        notes_lay = QVBoxLayout(self._notes_frame)
-        notes_lay.setContentsMargins(20, 16, 20, 16)
-        notes_lay.setSpacing(8)
-
-        notes_title = QLabel("РЕКОМЕНДАЦИИ")
-        notes_title.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
-        notes_title.setStyleSheet("color: #5B8DEF; letter-spacing: 1.5px; background: transparent;")
-        notes_lay.addWidget(notes_title)
-
-        self._notes_label = QLabel("")
-        self._notes_label.setFont(QFont("Segoe UI", 10))
-        self._notes_label.setStyleSheet("color: #8aabde; background: transparent;")
-        self._notes_label.setWordWrap(True)
-        notes_lay.addWidget(self._notes_label)
-
-        lay.addWidget(self._notes_frame)
-        lay.addStretch()
 
         scroll.setWidget(container)
         root.addWidget(scroll)
@@ -303,21 +281,19 @@ class TrainingTab(QWidget):
 
         disease = plan.get("disease", "")
         level = plan.get("level", "")
+        scene_id = plan.get("scene", "star")
+        bl_type = plan.get("bl_type", "Healthy")
 
         disease_ru = self.DISEASE_RU.get(disease, disease.capitalize())
-
-        scene_name = plan.get("background", "star")
-        scene_ru = self.SCENE_RU.get(scene_name, scene_name)
-
-        if disease:
-            self._subtitle.setText(f"Персональный план  ·  {disease_ru}  {level}")
+        scene_ru = self.SCENE_RU.get(scene_id, scene_id)
+        bl_ru = self.BL_RU.get(bl_type, "Норма")
 
         self._clear_grid()
 
         params = [
             ("Диагноз", f"{disease_ru} {level}", "#5B8DEF"),
             ("Сцена", scene_ru, "#7C5CBF"),
-            ("Механика", plan.get("mechanic", "—"), "#48CAE4"),
+            ("Цветовое зрение", bl_ru, "#48CAE4"),
         ]
 
         for i, (label, value, accent) in enumerate(params):
@@ -334,10 +310,6 @@ class TrainingTab(QWidget):
             self._exercises_lay.addWidget(card)
         self._exercises_frame.setVisible(bool(exercises))
 
-        notes = plan.get("notes",[])
-        if notes:
-            self._notes_label.setText("\n".join(f"• {n}" for n in notes))
-            self._notes_frame.setVisible(True)
 
     def _clear_grid(self):
         while self._params_grid.count():
@@ -366,8 +338,7 @@ class TrainingTab(QWidget):
 
     def _get_plan(self) -> dict:
         return self._exercise_plan or {
-            "background": "plain_white.png",
-            "object_hex": "#FFFFFF",
+            "scene": "star",
             "object_scale": 1.0,
             "speed_ms": 30,
         }

@@ -5,7 +5,6 @@ description: "Близорукость очень слабой степени"
 
 object:
   size: "medium"
-  exercise_mechanic: "аккомодационная гибкость"
 
 exercises:
   - name: "circle_right"

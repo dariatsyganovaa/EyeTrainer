@@ -5,8 +5,6 @@ description: "Дальнозоркость слабой степени"
 
 object:
   size: "medium"
-  exercise_mechanic: "накачка сферы"
-
 exercises:
   - name: "circle_right"
     speed: "medium"

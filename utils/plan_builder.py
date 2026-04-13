@@ -31,7 +31,6 @@ class ExercisePlan:
     bl_type: str = "Healthy"
     object_scale: float = 1.0
     speed_ms: int = 30
-    mechanic: str = ""
     exercises: list = field(default_factory=list)
     notes: list = field(default_factory=list)
 
@@ -43,7 +42,6 @@ class ExercisePlan:
             "bl_type": self.bl_type,
             "object_scale": self.object_scale,
             "speed_ms": self.speed_ms,
-            "mechanic": self.mechanic,
             "exercises": self.exercises,
             "notes": self.notes,
         }
@@ -64,9 +62,7 @@ class PlanBuilder:
         if config:
             plan.object_scale = config.object_scale
             plan.speed_ms = config.speed_ms
-            plan.mechanic = config.object.exercise_mechanic
             plan.exercises = [{"name": e.name, "speed": e.speed} for e in config.exercises]
-            plan.notes = self._build_notes(config, bl_type)
         else:
             plan = self._default_plan(user_id, disease, level, scene, bl_type)
 
@@ -100,24 +96,6 @@ class PlanBuilder:
         possible = list(set(possible))
         return random.choice(possible) if possible else DEFAULT_SCENE
 
-    @staticmethod
-    def _build_notes(config: DiseaseConfig, bl_type: str) -> list:
-        speed = config.exercises[0].speed if config.exercises else "medium"
-        speed_ru = {"very_slow": "очень медленно",
-                    "slow": "медленно", "medium": "стандартно"}.get(speed, speed)
-        notes = [
-            f"Скорость: {speed_ru}",
-            f"Механика: {config.object.exercise_mechanic}",
-        ]
-        if bl_type != "Healthy":
-            BL_RU = {
-                "Deuteranopia": "Дейтеранопия",
-                "Protanopia": "Протанопия",
-                "Tritanopia": "Тританопия",
-                "Achromatopsia": "Ахроматопсия",
-            }
-            notes.append(f"Адаптация цвета: {BL_RU.get(bl_type, bl_type)}")
-        return notes
 
     @staticmethod
     def _default_plan(user_id, disease, level, scene, bl_type) -> ExercisePlan:

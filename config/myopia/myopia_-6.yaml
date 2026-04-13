@@ -5,7 +5,6 @@ description: "Близорукость высокой степени"
 
 object:
   size: "extra_large"
-  exercise_mechanic: "периферийная фиксация"
 
 exercises:
   - name: "circle_right"

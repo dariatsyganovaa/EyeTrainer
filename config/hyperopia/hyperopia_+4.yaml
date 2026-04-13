@@ -5,7 +5,6 @@ description: "Дальнозоркость средней степени"
 
 object:
   size: "large"
-  exercise_mechanic: "Линза-Пресс"
 
 exercises:
   - name: "circle_right"

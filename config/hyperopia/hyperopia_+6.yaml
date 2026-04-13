@@ -5,7 +5,6 @@ description: "Дальнозоркость высокой степени"
 
 object:
   size: "extra_large"
-  exercise_mechanic: "Глубинный туннель"
 
 exercises:
   - name: "circle_right"

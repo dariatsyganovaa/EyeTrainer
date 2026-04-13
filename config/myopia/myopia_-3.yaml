@@ -5,7 +5,6 @@ description: "Близорукость средней степени"
 
 object:
   size: "large"
-  exercise_mechanic: "поиск круга"
 
 exercises:
   - name: "circle_right"
