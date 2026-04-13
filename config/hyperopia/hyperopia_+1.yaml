@@ -3,68 +3,8 @@ level: +1
 dioptria_range: "до +2.0 диоптрий"
 description: "Дальнозоркость слабой степени"
 
-color_perception:
-  deficit_level: "незначительный"
-  weak_colors:
-    - "красный (вблизи слегка плывёт)"
-
-shape_perception:
-  dominant_shape: "сжатый эллипсоид"
-  secondary_shape: "шаровидная форма, вытянутый эллипсоид"
-  distortion: "затруднения с определением чётких границ предметов"
-
-color_combinations:
-  - id: 1
-    object_color: "оранжевый"
-    object_hex: "#F4A261"
-    background: "светло-голубое небо"
-    background_hex: "#AEE6F8"
-    background_scene: "небесный пейзаж"
-    background_file: "sky_light_blue.png"
-    recommended: true
-
-  - id: 2
-    object_color: "жёлтый"
-    object_hex: "#E9C46A"
-    background: "голубое небо с облаками"
-    background_hex: "#E8F4F8"
-    background_scene: "облачное небо"
-    background_file: "sky_cloudy.png"
-    recommended: true
-
-  - id: 3
-    object_color: "оранжевый"
-    object_hex: "#F4A261"
-    background: "светло-зелёный лес"
-    background_hex: "#D8F3DC"
-    background_scene: "лесной пейзаж"
-    background_file: "forest_light.png"
-    recommended: true
-
-  - id: 4
-    object_color: "жёлто-оранжевый"
-    object_hex: "#FFBA08"
-    background: "белый"
-    background_hex: "#FFFFFF"
-    background_scene: "абстрактный"
-    background_file: "plain_white.png"
-    recommended: true
-
-  - id: 5
-    object_color: "оранжевый"
-    object_hex: "#F4A261"
-    background: "морской пейзаж"
-    background_hex: "#90E0EF"
-    background_scene: "морской пейзаж"
-    background_file: "sea_calm.png"
-    recommended: true
-
 object:
-  shape_start: "сплюснутый диск"
-  shape_end: "объёмный шар"
   size: "medium"
-  border: "чёткий контур"
-  texture: "однородная"
   exercise_mechanic: "накачка сферы"
 
 exercises:

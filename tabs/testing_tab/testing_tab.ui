@@ -124,7 +124,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Вам будут предложены вопросы, связанные с 3 разделами: медицинская инфомация, интересы и предпочтения</string>
+      <string>Вам будут предложены вопросы, связанные с 3 разделами: медицинская информация, интересы и предпочтения</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>

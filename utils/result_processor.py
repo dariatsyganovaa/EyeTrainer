@@ -28,20 +28,17 @@ class UserProfile:
     user_id: Optional[int] = None
     name: str = ""
     age: Optional[int] = None
-    has_vision_problems: bool = True
     wears_glasses: bool = False
-    disease_type: str = "myopia"
-    disease_level: str = "-1"
+    disease_type: str = "other"
+    disease_level: str = ""
+    color_blindness: str = "Healthy"
     interests: list = field(default_factory=list)
-    training_format: str = "classic"
-    color_scheme: str = "dark"
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
 class ResultProcessor:
     def process(self, result: SurveyResult) -> dict:
         profile = self._build_profile(result)
-
         self._save_to_json(profile, result)
 
         user_id = self._save_to_db(profile, result)
@@ -74,18 +71,16 @@ class ResultProcessor:
                     profile.age = int(values[0]) if values else None
                 except ValueError:
                     profile.age = None
-            elif qid == "q_med_002":
+            elif qid == "q_med":
                 profile.wears_glasses = self._to_bool(values)
             elif qid == "q_disease_type":
-                profile.disease_type = values[0] if values else "myopia"
+                profile.disease_type = values[0] if values else "other"
             elif qid == "q_disease_level":
-                profile.disease_level = values[0] if values else "-1"
+                profile.disease_level = values[0] if values else ""
+            elif qid == "q_color_blindness":
+                profile.color_blindness = values[0] if values else "Healthy"
             elif qid == "q_int_001":
                 profile.interests = values
-            elif qid == "q_pref_001":
-                profile.training_format = values[0] if values else "classic"
-            elif qid == "q_pref_002":
-                profile.color_scheme = values[0] if values else "dark"
         return profile
 
     @staticmethod
@@ -104,6 +99,8 @@ class ResultProcessor:
             }
             answers_dict["q_disease_type"] =[profile.disease_type]
             answers_dict["q_disease_level"] = [profile.disease_level]
+            answers_dict["q_color_blindness"] =[profile.color_blindness]
+            answers_dict["q_int_001"] = profile.interests
             builder = PlanBuilder()
             plan = builder.build(profile.user_id, answers_dict)
             return plan.to_dict()
@@ -116,10 +113,11 @@ class ResultProcessor:
         return {
             "disease": profile.disease_type,
             "level": profile.disease_level,
-            "background": "plain_white.png",
-            "object_hex": "#FFFFFF",
+            "bl_type": profile.color_blindness,
+            "scene": "star",
             "object_scale": 1.0,
             "speed_ms": 30,
+            "mechanic": "",
             "exercises":[
                 {"name": "circle_right", "speed": "medium"},
                 {"name": "horizontal",   "speed": "medium"},
@@ -141,13 +139,11 @@ class ResultProcessor:
                 "profile": {
                     "name": profile.name,
                     "age": profile.age,
-                    "has_vision_problems": profile.has_vision_problems,
                     "wears_glasses": profile.wears_glasses,
                     "disease_type": profile.disease_type,
                     "disease_level": profile.disease_level,
+                    "color_blindness": profile.color_blindness,
                     "interests": profile.interests,
-                    "training_format": profile.training_format,
-                    "color_scheme": profile.color_scheme,
                 },
                 "answers":[
                     {
@@ -173,11 +169,11 @@ class ResultProcessor:
             db = DatabaseManager()
             repo = UserRepository(db)
 
-            user_id = repo.create_user(name = profile.name or "Аноним", age  = profile.age or 0,  )
-            if profile.disease_type or profile.has_vision_problems:
-                repo.save_medical(user_id = user_id, disease = profile.disease_type, severity = 0, )
-            if profile.interests or profile.color_scheme:
-                repo.save_preferences(user_id = user_id, theme = profile.color_scheme or "dark", interests = profile.interests, )
+            user_id = repo.create_user(name = profile.name or "Аноним", age  = profile.age or 0)
+            if profile.disease_type and profile.disease_type != "other":
+                repo.save_medical(user_id = user_id, disease = profile.disease_type, severity = 0)
+            if profile.interests:
+                repo.save_preferences(user_id = user_id, theme = "dark", interests = profile.interests)
             db.close()
             return user_id
         except Exception as e:
@@ -198,12 +194,15 @@ class ResultProcessor:
 
     @staticmethod
     def _make_summary(profile: UserProfile, plan: dict) -> str:
-        DISEASE_RU = {"myopia": "Миопия", "hyperopia": "Гиперметропия"}
+        DISEASE_RU = {"myopia": "Миопия", "hyperopia": "Гиперметропия", "other": "Другое", }
+        BL_RU = {"Healthy": "Нет нарушений", "Deuteranopia": "Дейтеранопия",
+                "Protanopia": "Протанопия", "Tritanopia": "Тританопия",
+                "Achromatopsia": "Ахроматопсия",}
         INTERESTS_RU = {
-            "nature": "Природа", "transport": "Транспорт",
-            "space": "Космос", "animals": "Животные", "sea": "Море"
+            "nature": "Живая природа", "transport": "Авиация и транспорт",
+            "space": "Космос", "animals": "Животные", "sea": "Водная тематика"
         }
-        SCENE_DISPLAY_RU = {
+        SCENE_RU = {
             "boat": "Катер в море", "bubble": "Пузыри под водой",
             "bug": "Жук в траве", "butterfly": "Бабочка в траве",
             "mouse": "Мышонок на полу", "plane": "Самолет в небе",
@@ -212,9 +211,14 @@ class ResultProcessor:
 
         lines = []
         if profile.name:
-            lines.append(f"Пользователь: {profile.name}")
+            age_str = f", {profile.age} лет" if profile.age else ""
+            lines.append(f"Пользователь: {profile.name}{age_str}")
 
-        lines.append(f"Диагноз: {DISEASE_RU.get(profile.disease_type)} {profile.disease_level}")
+        disease_ru = DISEASE_RU.get(profile.disease_type, profile.disease_type)
+        level_str = f" {profile.disease_level}" if profile.disease_level else ""
+        lines.append(f"Диагноз: {disease_ru}{level_str}")
+        lines.append(f"Цветовое зрение: {BL_RU.get(profile.color_blindness, profile.color_blindness)}")
+        lines.append(f"Очки/линзы: {'Да' if profile.wears_glasses else 'Нет'}")
 
         if profile.interests:
             ints = ", ".join(INTERESTS_RU.get(i, i) for i in profile.interests)
@@ -222,8 +226,10 @@ class ResultProcessor:
 
         lines.append("─" * 28)
 
-        scene_id = plan.get("background", "star")
-        lines.append(f"Сцена: {SCENE_DISPLAY_RU.get(scene_id, scene_id)}")
+        scene = plan.get("scene", "")
+        scene_ru = SCENE_RU.get(scene, scene)
+        if scene_ru:
+            lines.append(f"Сцена: {scene_ru}")
 
         for note in plan.get("notes", []):
             lines.append(f"• {note}")

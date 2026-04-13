@@ -3,65 +3,8 @@ level: +4
 dioptria_range: "от +2.0 до +5.0 диоптрий"
 description: "Дальнозоркость средней степени"
 
-color_perception:
-  deficit_level: "незначительный/умеренный"
-  weak_colors:
-    - "красный"
-    - "оранжевый"
-
-shape_perception:
-  dominant_shape: "сжатый эллипсоид"
-  secondary_shape: "шаровидная форма"
-  distortion: "выраженная сплюснутая форма, объекты теряют очертания вблизи"
-
-color_combinations:
-  - id: 1
-    object_color: "тёмно-синий"
-    object_hex: "#023E8A"
-    background: "белый"
-    background_hex: "#FFFFFF"
-    background_scene: "абстрактный"
-    background_file: "plain_white.png"
-    recommended: true
-  - id: 2
-    object_color: "белый"
-    object_hex: "#FFFFFF"
-    background: "синее небо"
-    background_hex: "#0077B6"
-    background_scene: "ясное синее небо"
-    background_file: "sky_blue_clear.png"
-    recommended: true
-  - id: 3
-    object_color: "жёлтый"
-    object_hex: "#FFD60A"
-    background: "светло-жёлтый луг"
-    background_hex: "#F0F4C3"
-    background_scene: "луговой пейзаж"
-    background_file: "meadow_sunny.png"
-    recommended: true
-  - id: 4
-    object_color: "тёмно-синий"
-    object_hex: "#023E8A"
-    background: "морской пейзаж"
-    background_hex: "#CAF0F8"
-    background_scene: "морской пейзаж"
-    background_file: "sea_light.png"
-    recommended: true
-  - id: 5
-    object_color: "голубой"
-    object_hex: "#48CAE4"
-    background: "белый"
-    background_hex: "#FFFFFF"
-    background_scene: "абстрактный"
-    background_file: "plain_white.png"
-    recommended: true
-
 object:
-  shape_start: "плоский размытый овал"
-  shape_end: "чёткий круг"
   size: "large"
-  border: "жирный чёткий контур"
-  texture: "однородная"
   exercise_mechanic: "Линза-Пресс"
 
 exercises:
