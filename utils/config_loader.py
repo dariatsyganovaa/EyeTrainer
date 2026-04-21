@@ -10,7 +10,6 @@ CONFIG_DIR = os.path.join(os.path.dirname(__file__), "..", "config")
 @dataclass
 class ColorCombo:
     object_color: str
-    object_hex: str
     background: str
     background_hex: str
     background_file: str
@@ -18,12 +17,7 @@ class ColorCombo:
 
 @dataclass
 class ObjectParams:
-    shape_start: str
-    shape_end: str
     size: str
-    border: str
-    exercise_mechanic: str
-
 
 @dataclass
 class ExerciseParams:
@@ -42,7 +36,7 @@ class DiseaseConfig:
     @property
     def primary_color(self) -> ColorCombo:
         return self.colors[0] if self.colors else ColorCombo(
-            "белый", "#FFFFFF", "белый", "#FFFFFF", "plain_white.png"
+            "белый", "#FFFFFF", "белый", "#FFFFFF", "star"
         )
 
     @property
@@ -81,10 +75,9 @@ class ConfigLoader:
         colors = [
             ColorCombo(
                 object_color = c.get("object_color", ""),
-                object_hex = c.get("object_hex", "#FFFFFF"),
                 background = c.get("background", ""),
                 background_hex = c.get("background_hex", "#FFFFFF"),
-                background_file = c.get("background_file", "plain_white.png"),
+                background_file = c.get("background_file", "star"),
             )
             for c in data.get("color_combinations", [])
             if c.get("recommended", False)
@@ -92,11 +85,7 @@ class ConfigLoader:
 
         obj_raw = data.get("object", {})
         obj = ObjectParams(
-            shape_start = obj_raw.get("shape_start", ""),
-            shape_end = obj_raw.get("shape_end", ""),
             size = obj_raw.get("size", "medium"),
-            border = obj_raw.get("border", ""),
-            exercise_mechanic = obj_raw.get("exercise_mechanic", ""),
         )
 
         exercises = [

@@ -158,6 +158,7 @@ class EyeTrainerApp(QMainWindow):
 
         self.tab_testing.survey_finished.connect(self._on_survey_finished)
         self.tabs.currentChanged.connect(self._on_tab_changed)
+        self.tab_training.training_finished.connect(self._on_training_finished)
 
     def _on_survey_finished(self, survey_result):
         result = self._processor.process(survey_result)
@@ -178,6 +179,22 @@ class EyeTrainerApp(QMainWindow):
         if index == 2 and self._current_user_id:
             if not self.tab_training._exercise_plan:
                 self.tab_training.load_plan_from_db(self._current_user_id)
+
+    def _on_training_finished(self, report):
+        status = "Успешно" if report['is_success'] else "Требуется повторение"
+
+        report_text = (
+            f"Оценка точности: {report['score']}/100\n"
+            f"Средняя ошибка: {report['avg_error']} px\n"
+            f"Результат: {status}\n"
+            f"Участков потери фокуса: {len(report['anomalies'])}"
+        )
+
+        self.tab_diagnosis.add_result(
+            source="Анализ гимнастики",
+            data=report_text
+        )
+        self.tabs.setCurrentIndex(1)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Escape:

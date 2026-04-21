@@ -9,9 +9,8 @@ from PySide6.QtWidgets import (
     QPushButton, QScrollArea, QFrame, QGridLayout,
     QGraphicsDropShadowEffect, QSizePolicy
 )
-from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, Signal, QProcess
 from PySide6.QtGui import QFont, QColor, QLinearGradient, QPainter, QPen
-
 
 def _shadow(blur=24, dy=6, alpha=80):
     s = QGraphicsDropShadowEffect()
@@ -185,6 +184,8 @@ class TrainingTab(QWidget):
         "water.png": "Спокойное море",
     }
 
+    training_finished = Signal(dict)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._exercise_plan   = {}
@@ -352,7 +353,96 @@ class TrainingTab(QWidget):
             print(f"[TrainingTab] exe не найден по пути: {exe_path}")
             return
 
-        subprocess.Popen([str(exe_path)])
+        self.process = QProcess()
+        self.process.setProgram(str(exe_path))
+        self.process.finished.connect(self._on_gymnastics_closed)
+        self.process.start()
+
+    def _on_gymnastics_closed(self):
+            print("Гимнастика завершена. Начинаем анализ...")
+
+            log_path = Path("eye_gymnastics/data/logs/target_log.json")
+
+            if not log_path.exists():
+                print("Лог цели не найден!")
+                return
+
+            try:
+                with open(log_path, "r") as f:
+                    target_data = json.load(f)
+
+                gaze_data = self._generate_fake_gaze(target_data)
+
+                validator = ExerciseValidator(threshold=2.5, window_size=10)
+                report = validator.validate(target_data, gaze_data)
+
+                self.training_finished.emit(report)
+
+            except Exception as e:
+                print(f"Ошибка при анализе: {e}")
+
+    def _generate_fake_gaze(self, target_data):
+        gaze = []
+        for p in target_data:
+            noise_x = random.uniform(-1.5, 1.5)
+            noise_y = random.uniform(-1.5, 1.5)
+
+            anomaly = 0
+            if 3.0 < p['duration'] < 4.5:
+                anomaly = 15
+
+            gaze.append({
+                'duration': p['duration'],
+                'x_coord': p['x_coord'] + noise_x + anomaly,
+                'y_coord': p['y_coord'] + noise_y + anomaly
+            })
+        return gaze
+
+    def _analyze_results(self):
+            log_path = Path("eye_gymnastics/python_renderer/gymnastics.log")
+
+            if not log_path.exists():
+                print("Файл лога не найден")
+                return
+
+            try:
+                sessions = {}
+                with open(log_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        try:
+                            data = json.loads(line)
+                            sid = data.get("session_id")
+                            if sid not in sessions:
+                                sessions[sid] = []
+                            sessions[sid].append(data)
+                        except: continue
+
+                if not sessions: return
+
+                last_sid = list(sessions.keys())[-1]
+                last_session_data = sessions[last_sid]
+
+                target_data = []
+                for entry in last_session_data:
+                    if entry.get("levelname") == "INFO" and entry.get("duration") > 0:
+                        target_data.append({
+                            'duration': entry['duration'],
+                            'x_coord': entry['x_coord'],
+                            'y_coord': entry['y_coord']
+                        })
+
+                if len(target_data) < 10:
+                    print("Слишком мало данных для анализа")
+                    return
+
+                gaze_data = self._generate_mock_gaze(target_data)
+                validator = ExerciseValidator(threshold=3.0)
+                report = validator.validate(target_data, gaze_data)
+
+                self.training_finished.emit(report)
+
+            except Exception as e:
+                print(f"Ошибка парсинга лога: {e}")
 
     def _cleanup(self):
         pass
