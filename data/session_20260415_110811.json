@@ -1,0 +1,67 @@
+{
+    "session_id": "20260415_110811",
+    "color_blindness_type": "Deuteranopia",
+    "movement_function": "calc_cur_coordinates_circle_right",
+    "session_start": "2026-04-15T11:08:11.596031",
+    "completion_status": "completed",
+    "coordinates": [
+        {
+            "frame": 1,
+            "x": 4.25,
+            "y": 0.012
+        },
+        {
+            "frame": 2,
+            "x": -4.229,
+            "y": 0.423
+        },
+        {
+            "frame": 3,
+            "x": 2.919,
+            "y": -3.089
+        },
+        {
+            "frame": 4,
+            "x": 0.727,
+            "y": 4.187
+        },
+        {
+            "frame": 5,
+            "x": -3.765,
+            "y": -1.972
+        },
+        {
+            "frame": 6,
+            "x": 3.824,
+            "y": -1.855
+        },
+        {
+            "frame": 7,
+            "x": -0.941,
+            "y": 4.145
+        },
+        {
+            "frame": 8,
+            "x": -2.579,
+            "y": -3.378
+        },
+        {
+            "frame": 9,
+            "x": 4.25,
+            "y": 0.038
+        },
+        {
+            "frame": 10,
+            "x": -2.631,
+            "y": 3.337
+        },
+        {
+            "frame": 11,
+            "x": -0.887,
+            "y": -4.156
+        }
+    ],
+    "session_end": "2026-04-15T11:08:12.639357",
+    "duration_seconds": 1.04,
+    "total_frames": 11
+}
