@@ -1,1 +1,13 @@
-python_survey/
+data/session_*.json
+data/gymnastics.log
+data/videos/
+**/__pycache__/
+*.pyc
+*.pyo
+.qtcreator/
+.qtc_clangd/
+*.creator.user
+*.cflags
+*.cxxflags
+*.config
+*.includes

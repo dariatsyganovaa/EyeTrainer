@@ -246,7 +246,7 @@ class GazeTrackerRunner:
     def stop(self):
         self.running = False
         if hasattr(self, 'thread'):
-            self.thread.join()
+            self.thread.join(timeout=3.0)
         return self.history
 
     def _run(self):
@@ -263,6 +263,8 @@ class GazeTrackerRunner:
             ret, frame = cap.read()
             if not ret:
                 print("[GazeTracker] Failed to receive frame")
+                bre
+            if not self.running:
                 break
 
             features = self.extract_features_from_frame(frame)

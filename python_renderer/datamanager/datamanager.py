@@ -58,17 +58,41 @@ class DataManager:
 
         return self.session_data.copy()
 
+    # def log_coordinates(self, coord):
+    #     if not self.start_timestamp:
+    #         return
+    #     current_time = time.time() - self.start_timestamp
+    #     self.frame_count += 1
+
+    #     self.session_data["coordinates"].append({
+    #         'frame': self.frame_count,
+    #         'x':    round(coord[0], 3),
+    #         'y':    round(coord[2], 3),
+    #     })
+
     def log_coordinates(self, coord):
         if not self.start_timestamp:
             return
+
         current_time = time.time() - self.start_timestamp
         self.frame_count += 1
 
         self.session_data["coordinates"].append({
-            'frame': self.frame_count,
-            'x':    round(coord[0], 3),
-            'y':    round(coord[2], 3),
+            "frame": self.frame_count,
+            "x": round(coord[0], 3),
+            "y": round(coord[2], 3),
         })
+
+        if self.frame_count % 6 == 0:
+            self.logger.info("frame", extra={
+                "session_id": self.session_data.get("session_id", ""),
+                "bl_type": self.session_data.get("color_blindness_type", ""),
+                "movement": self.session_data.get("movement_function", ""),
+                "duration": round(current_time, 3),
+                "x_coord": round(coord[0], 3),
+                "y_coord": round(coord[2], 3),
+                "error_msg": "",
+            })
 
     def end_session(self, session_data: dict):
         duration = time.time() - self.start_timestamp if self.start_timestamp else 0
@@ -91,7 +115,7 @@ class DataManager:
             'x_coord': 0, 'y_coord': 0, 'error_msg': ''
         })
 
-        return self.session_data  
+        return self.session_data
     
     def add_error(self, error: Exception):
             error_msg = f"{type(error).__name__}: {str(error)}"
